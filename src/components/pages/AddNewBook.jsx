@@ -18,16 +18,16 @@ const AddNewBook = () => {
 
   const searchBooks = async (searchTerm) => {
     try {
+      const searchBy = queryType === 'author' ? 'inauthor' : 'intitle';
       const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchTerm}&orderBy=relevance`
+        `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${searchTerm}&orderBy=relevance`
       );
       const data = await response.json();
       setResults(data.items || []);
     } catch (error) {
       console.error('Error fetching books:', error);
     }
-  };
-
+  }; 
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -82,10 +82,14 @@ const AddNewBook = () => {
     closeModal();
   };
 
-
   return (
     <div>
       <h1>Search for New Books</h1>
+      <p>Search by: 
+      <select value={queryType} onChange={(e) => setQueryType(e.target.value)}>
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+      </select></p>
       <input
         type="text"
         value={query}
