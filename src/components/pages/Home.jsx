@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import BookCardLg from '../ui/BookCardLg';
 import Modal from 'react-modal';
-import { ref, push } from 'firebase/database';
+import { ref, push, update } from 'firebase/database';
 import { database } from '../../firebase'; // Adjust import path based on your project structure
 
 Modal.setAppElement('#root');
@@ -16,7 +16,10 @@ const Home = () => {
     author: '',
     series: '',
   });
+  const [editingBook, setEditingBook] = useState(null);
+  
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
 
   const DATABASE_URL = 'https://library-db1a2-default-rtdb.firebaseio.com';
 
@@ -45,27 +48,27 @@ const Home = () => {
   }, []); // Empty dependency array ensures it only runs once on mount
 
   // Fetch upcoming releases data
-  useEffect(() => {
-    const fetchReleases = async () => {
-      try {
-        const response = await axios.get(`${DATABASE_URL}/upcomingBooks.json`);
-        const data = response.data;
-        if (data) {
-          const bookArray = Object.entries(data).map(([key, book]) => ({
-            key,
-            ...book,
-          }));
-          setNewReleases(bookArray); // Update state with upcoming books data
-        } else {
-          setNewReleases([]); // If no data, set an empty array
-        }
-      } catch (error) {
-        console.error('Error fetching upcoming books:', error);
-        setNewReleases([]); // If error, set an empty array
+  const fetchReleases = async () => {
+    try {
+      const response = await axios.get(`${DATABASE_URL}/upcomingBooks.json`);
+      const data = response.data;
+      if (data) {
+        const bookArray = Object.entries(data).map(([key, book]) => ({
+          key,
+          ...book,
+        }));
+        setNewReleases(bookArray); // Update state with upcoming books data
+      } else {
+        setNewReleases([]); // If no data, set an empty array
       }
-    };
+    } catch (error) {
+      console.error('Error fetching upcoming books:', error);
+      setNewReleases([]); // If error, set an empty array
+    }
+  };
 
-    fetchReleases(); // Call fetchReleases when component mounts
+  useEffect(() => {
+    fetchReleases(); // Fetch upcoming books when component mounts
   }, []); // Empty dependency array ensures it only runs once on mount
 
   // Ensure books is always an array
@@ -103,11 +106,48 @@ const Home = () => {
         console.log('New upcoming book added!');
         setModalIsOpen(false); // Close the modal after adding the book
         setNewBook({ title: '', releaseDate: '', author: '', series: '' }); // Reset form
+
+        // Refresh the upcoming releases after adding the new book
+        fetchReleases();
       } catch (error) {
         console.error('Error adding new book:', error);
       }
     } else {
       alert('Please fill all fields!');
+    }
+  };
+
+  const handleEditBook = (book) => {
+    setEditingBook(book); // Set the book to be edited
+    setNewBook({
+      title: book.title,
+      releaseDate: book.releaseDate,
+      author: book.author,
+      series: book.series,
+    });
+    setEditModalIsOpen(true); // Open the edit modal
+  };
+
+  const handleUpdateBook = async () => {
+    if (editingBook) {
+      const { title, releaseDate, author, series } = newBook;
+      try {
+        const bookRef = ref(database, `upcomingBooks/${editingBook.key}`);
+        await update(bookRef, {
+          title,
+          releaseDate,
+          author,
+          series,
+        });
+        console.log('Upcoming book updated!');
+        setEditModalIsOpen(false); // Close the modal after updating
+        setNewBook({ title: '', releaseDate: '', author: '', series: '' }); // Reset form
+
+        // Refresh the upcoming releases after updating the book
+        fetchReleases();
+      } catch (error) {
+        console.error('Error updating book:', error);
+      }
     }
   };
 
@@ -121,7 +161,10 @@ const Home = () => {
       <button onClick={() => setModalIsOpen(true)}>New</button>
       <div className="card-container">
         {validUpcomingReleases.map((book) => (
-          <BookCardLg key={book.key} book={book} />
+          <div key={book.key}>
+            <BookCardLg book={book} />
+            <button onClick={() => handleEditBook(book)}>Edit</button>
+          </div>
         ))}
       </div>
 
@@ -189,6 +232,59 @@ const Home = () => {
 
           <button type="submit">Add Book</button>
           <button type="button" onClick={() => setModalIsOpen(false)}>Cancel</button>
+        </form>
+      </Modal>
+
+      {/* Modal for Editing an Upcoming Book */}
+      <Modal isOpen={editModalIsOpen} onRequestClose={() => setEditModalIsOpen(false)} contentLabel="Edit Upcoming Book">
+        <h2>Edit Upcoming Book</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdateBook(); }}>
+          <label>
+            Title:
+            <input
+              type="text"
+              name="title"
+              value={newBook.title}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+
+          <label>
+            Release Date:
+            <input
+              type="date"
+              name="releaseDate"
+              value={newBook.releaseDate}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+
+          <label>
+            Author:
+            <input
+              type="text"
+              name="author"
+              value={newBook.author}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+
+          <label>
+            Series:
+            <input
+              type="text"
+              name="series"
+              value={newBook.series}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+
+          <button type="submit">Update Book</button>
+          <button type="button" onClick={() => setEditModalIsOpen(false)}>Cancel</button>
         </form>
       </Modal>
     </div>
