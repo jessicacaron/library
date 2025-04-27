@@ -54,21 +54,21 @@ const AddNewBook = () => {
 
   const handleAddToLibrary = async () => {
     const newBook = {
-      id: selectedBook.id,
-      title: selectedBook.volumeInfo.title,
-      authors: selectedBook.volumeInfo.authors || [],
-      publishedDate: selectedBook.volumeInfo.publishedDate,
-      pages: selectedBook.volumeInfo.pageCount,
-      smCover: selectedBook.volumeInfo.imageLinks.smallThumbnail,
-      lgCover: selectedBook.volumeInfo.imageLinks.thumbnail,
-      genre,
-      status,
-      format,
-      dateAdded: new Date().toISOString(),
-      dateStarted: new Date().toISOString(),
-      dateFinished: new Date().toISOString(),
-      read: "n",
-    };
+        id: selectedBook.id,
+        title: selectedBook.volumeInfo.title || '',
+        authors: selectedBook.volumeInfo.authors || [],
+        publishedDate: selectedBook.volumeInfo.publishedDate || '',
+        pages: selectedBook.volumeInfo.pageCount || 0,
+        smCover: selectedBook.volumeInfo.imageLinks?.smallThumbnail || '',
+        lgCover: selectedBook.volumeInfo.imageLinks?.thumbnail || '',
+        genre,
+        status,
+        format,
+        dateAdded: new Date().toISOString(),
+        dateStarted: new Date().toISOString(),
+        dateFinished: new Date().toISOString(),
+        read: "n",
+      };
     // Implement the logic to save newBook to your library
     console.log('Book added to library:', newBook);
     try {
