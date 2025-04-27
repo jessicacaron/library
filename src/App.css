@@ -61,3 +61,8 @@ button {
   background-color: transparent;
   font-size: 18px;
 }
+
+/* buttons */
+button {
+  border: 1px solid pink;
+}
