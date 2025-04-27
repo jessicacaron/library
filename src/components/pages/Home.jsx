@@ -17,10 +17,8 @@ const Home = () => {
     series: '',
   });
   const [editingBook, setEditingBook] = useState(null);
-  
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-
   const DATABASE_URL = 'https://library-db1a2-default-rtdb.firebaseio.com';
 
   // Fetch books data

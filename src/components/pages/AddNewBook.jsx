@@ -20,7 +20,7 @@ const AddNewBook = () => {
     try {
       const searchBy = queryType === 'author' ? 'inauthor' : 'intitle';
       const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${searchTerm}&orderBy=relevance`
+        `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:"${searchTerm}"&orderBy=relevance`
       );
       const data = await response.json();
       setResults(data.items || []);
@@ -126,9 +126,20 @@ const AddNewBook = () => {
                 >
                 <option value="">Select genre</option>
                 <option value="Romance">Romance</option>
-                <option value="Mystery">Mystery</option>
                 <option value="Fantasy">Fantasy</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Horror">Horror</option>
                 <option value="Science Fiction">Science Fiction</option>
+                <option value="Action-Adventure">Action & Adventure</option>
+                <option value="Dystopian">Dystopian</option>
+                <option value="Travel">Travel</option>
+                <option value="Religion">Religion</option>
+                <option value="Philosophy">Philosophy</option>
+                <option value="Biography">Biography</option>
+                <option value="True-Crime">True Crime</option>
+                <option value="Self-Help">Self Help</option>
+                <option value="Historical-Fiction">Historical Fiction</option>
                 <option value="Non-Fiction">Non-Fiction</option>
                 </select>
             </label>
@@ -144,18 +155,6 @@ const AddNewBook = () => {
                 <option value="Physical">Physical</option>
                 <option value="Ebook">Ebook</option>
                 <option value="Audiobook">Audiobook</option>
-                </select>
-            </label>
-
-            <label>
-                Status:
-                <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}  
-                >
-                <option value="none">None</option>
-                <option value="wish">Wish</option>
-                <option value="loaned">Loaned</option>
                 </select>
             </label>
 
