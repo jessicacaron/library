@@ -1,7 +1,7 @@
 import React from 'react'
 
 const BookCardLg = ({book}) => {
-  const { title, author, year, genre, coverImage, description } = book;
+  const { title, author, year, genre, coverImage } = book;
 
   return (
     <div className={'book-card'}>
