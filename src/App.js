@@ -15,6 +15,9 @@ import BookDetails from './components/pages/BookDetails';
 import BookList from './components/pages/Booklist';
 
 function App() {
+  
+  
+
   return (
     <Router>
       <Routes>
@@ -28,9 +31,8 @@ function App() {
           <Route path="/tbr" element={<TBR />} />
           <Route path="/wish-list" element={<WishLIst />} />
           <Route path="/add" element={<AddNewBook />} />
-          <Route path="/book/:id" element={<BookDetails />} />
-          <Route path="/" element={<BookList />} />
-          <Route path="/book/:id" element={<BookDetails />} />
+          <Route path="/booklist" element={<BookList />} />
+          <Route path="/book/:bookKey" element={<BookDetails />} />
 
         </Route>
       </Routes>

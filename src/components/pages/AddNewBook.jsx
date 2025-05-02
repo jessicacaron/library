@@ -64,10 +64,15 @@ const AddNewBook = () => {
         genre,
         status,
         format,
-        dateAdded: new Date().toISOString(),
-        dateStarted: new Date().toISOString(),
-        dateFinished: new Date().toISOString(),
+        notes: "",
+        loaned: "n",
+        review: "",
+        stars: 0,
+        dateAdded: new Date(),
+        dateStarted: new Date(),
+        dateFinished: new Date(),
         read: "n",
+        description: selectedBook.volumeInfo.description || '',
       };
     // Implement the logic to save newBook to your library
     console.log('Book added to library:', newBook);
@@ -81,6 +86,7 @@ const AddNewBook = () => {
       }
     closeModal();
   };
+  
 
   return (
     <div>

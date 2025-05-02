@@ -13,7 +13,7 @@ const BookCardLg = ({book}) => {
         <p className="book-card-author">by {author}</p>
         <p className="book-card-year">{year}</p>
         <p className="book-card-genre">{genre}</p>
-        {description && <p className="book-card-description">{description}</p>}
+        {/* {description && <p className="book-card-description">{description}</p>} */}
       </div>
     </div>
   );
