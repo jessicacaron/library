@@ -115,17 +115,28 @@ const BookDetails = () => {
   };
 
   const handleReadStatusChange = async () => {
-    const updatedReadStatus = formData.read === 'n' ? 'y' : 'n';
+    const isCurrentlyRead = formData.read === 'y';
+    const updatedReadStatus = isCurrentlyRead ? 'n' : 'y';
+  
+    // Set dateFinished to now if marking as read; otherwise, clear it
+    const updatedDateFinished = isCurrentlyRead ? '' : new Date().toISOString();
+  
     try {
-      await axios.patch(`${DATABASE_URL}/books/${bookKey}.json`, { read: updatedReadStatus });
+      await axios.patch(`${DATABASE_URL}/books/${bookKey}.json`, {
+        read: updatedReadStatus,
+        dateFinished: updatedDateFinished,
+      });
+  
       setFormData((prevData) => ({
         ...prevData,
         read: updatedReadStatus,
+        dateFinished: updatedDateFinished,
       }));
     } catch (error) {
       console.error('Error updating read status:', error);
     }
   };
+  
 
   if (!book) {
     return <p>Loading book details...</p>;

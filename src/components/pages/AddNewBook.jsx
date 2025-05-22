@@ -15,13 +15,15 @@ const AddNewBook = () => {
   const [genre, setGenre] = useState('');
   const [format, setFormat] = useState('');
   const [status, setStatus] = useState('none');
+  const [pages, setPages] = useState(0);
+
 
   const searchBooks = async (searchTerm) => {
     try {
       const searchBy = queryType === 'author' ? 'inauthor' : 'intitle';
       const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:"${searchTerm}"&orderBy=relevance`
-      );
+        `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:"${searchTerm}"&orderBy=relevance&maxResults=40`
+    );
       const data = await response.json();
       setResults(data.items || []);
     } catch (error) {
@@ -44,8 +46,10 @@ const AddNewBook = () => {
     setGenre('');
     setStatus('none');
     setFormat('none');
+    setPages(book.volumeInfo.pageCount || 0); // Prefill from API
     setModalIsOpen(true);
   };
+  
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -58,7 +62,7 @@ const AddNewBook = () => {
         title: selectedBook.volumeInfo.title || '',
         authors: selectedBook.volumeInfo.authors || [],
         publishedDate: selectedBook.volumeInfo.publishedDate || '',
-        pages: selectedBook.volumeInfo.pageCount || 0,
+        pages, // ← uses your state now
         smCover: selectedBook.volumeInfo.imageLinks?.smallThumbnail || '',
         lgCover: selectedBook.volumeInfo.imageLinks?.thumbnail || '',
         genre,
@@ -89,7 +93,7 @@ const AddNewBook = () => {
   
 
   return (
-    <div>
+    <div className='add-new'>
       <h1>Search for New Books</h1>
       <p>Search by: 
       <select value={queryType} onChange={(e) => setQueryType(e.target.value)}>
@@ -162,6 +166,15 @@ const AddNewBook = () => {
                 <option value="Ebook">Ebook</option>
                 <option value="Audiobook">Audiobook</option>
                 </select>
+            </label>
+            <label>
+                Pages:
+                <input
+                type="number"
+                value={pages}
+                onChange={(e) => setPages(parseInt(e.target.value) || 0)}
+                min="0"
+                />
             </label>
 
             <button type="submit">Add to Library</button>

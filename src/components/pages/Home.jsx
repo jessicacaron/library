@@ -4,6 +4,8 @@ import Modal from 'react-modal';
 import { ref, push, update } from 'firebase/database';
 import { database } from '../../firebase';
 import { remove } from 'firebase/database';
+import BookCardSm from '../ui/BookCardSm';
+
 
 import BookCardLg from '../ui/BookCardLg';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
@@ -35,10 +37,11 @@ const Home = () => {
   
         const booksList = Object.entries(data).map(([key, book]) => ({ key, ...book }));
         setBooks(booksList);
-  
+       
         const readIn2025 = booksList.filter(
           (b) => b.read === 'y' && b.dateFinished && new Date(b.dateFinished).getFullYear() === 2025
         );
+        
   
         setBooksRead2025(readIn2025.length);
         setPagesRead2025(readIn2025.reduce((sum, b) => sum + (+b.pages || 0), 0));
@@ -285,7 +288,7 @@ const Home = () => {
       <h2>In-Progress Books</h2>
       <div className="card-container">
         {inProgressBooks.map((book) => (
-          <BookCardLg key={book.key} book={book} />
+          <BookCardSm key={book.key} book={book} />
         ))}
       </div>
 

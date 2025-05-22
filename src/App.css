@@ -223,3 +223,46 @@ hr{
   margin-right: 10px; /* optional for spacing from edge */
 }
 
+.book-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: .5rem;
+  /* border: 1px solid #ccc; */
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.title-with-arrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.book-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dropdown-arrow {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.book-thumbnail {
+  height: 66px;
+  width: auto;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.sm-card-container{
+  border: 1px solid pink;
+  padding: 10px;
+}
+
+.add-new{
+  margin: 1.5rem;
+}
