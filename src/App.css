@@ -108,19 +108,6 @@ hr{
   gap: 1rem;
   margin-bottom: 1rem;
 }
-/* 
-.tab-button {
-  padding: 0.5rem 1rem;
-  background-color: #eee;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.tab-button.active {
-  background-color: #007bff;
-  color: white;
-} */
 
 .reading-stats {
   text-align: center;
@@ -132,10 +119,6 @@ hr{
   padding: 1em;
   margin: 1em;
 }
-
-/* .new-releases-container{
-  padding: 1em;
-} */
 
 .home-container{
   padding: 1em;
