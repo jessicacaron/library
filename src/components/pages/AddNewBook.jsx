@@ -16,6 +16,8 @@ const AddNewBook = () => {
   const [format, setFormat] = useState('');
   const [status, setStatus] = useState('none');
   const [pages, setPages] = useState(0);
+  const [addToTBR, setAddToTBR] = useState(false);
+
 
 
   const searchBooks = async (searchTerm) => {
@@ -46,9 +48,11 @@ const AddNewBook = () => {
     setGenre('');
     setStatus('none');
     setFormat('none');
-    setPages(book.volumeInfo.pageCount || 0); // Prefill from API
+    setPages(book.volumeInfo.pageCount || 0);
+    setAddToTBR(false); // ← reset checkbox
     setModalIsOpen(true);
   };
+  
   
 
   const closeModal = () => {
@@ -58,38 +62,37 @@ const AddNewBook = () => {
 
   const handleAddToLibrary = async () => {
     const newBook = {
-        id: selectedBook.id,
-        title: selectedBook.volumeInfo.title || '',
-        authors: selectedBook.volumeInfo.authors || [],
-        publishedDate: selectedBook.volumeInfo.publishedDate || '',
-        pages, // ← uses your state now
-        smCover: selectedBook.volumeInfo.imageLinks?.smallThumbnail || '',
-        lgCover: selectedBook.volumeInfo.imageLinks?.thumbnail || '',
-        genre,
-        status,
-        format,
-        notes: "",
-        loaned: "n",
-        review: "",
-        stars: 0,
-        dateAdded: new Date(),
-        dateStarted: new Date(),
-        dateFinished: new Date(),
-        read: "n",
-        description: selectedBook.volumeInfo.description || '',
-      };
-    // Implement the logic to save newBook to your library
-    console.log('Book added to library:', newBook);
+      id: selectedBook.id,
+      title: selectedBook.volumeInfo.title || '',
+      authors: selectedBook.volumeInfo.authors || [],
+      publishedDate: selectedBook.volumeInfo.publishedDate || '',
+      pages,
+      smCover: selectedBook.volumeInfo.imageLinks?.smallThumbnail || '',
+      lgCover: selectedBook.volumeInfo.imageLinks?.thumbnail || '',
+      genre,
+      status: addToTBR ? 'tbr' : status,
+      format,
+      notes: "",
+      loaned: "n",
+      review: "",
+      stars: 0,
+      dateAdded: new Date(),
+      dateStarted: new Date(),
+      dateFinished: new Date(),
+      read: "n",
+      description: selectedBook.volumeInfo.description || '',
+    };
+  
     try {
-        const booksRef = ref(database, 'books');
-        await push(booksRef, newBook);
-        console.log('Book added to library:', newBook);
-        closeModal();
-      } catch (error) {
-        console.error('Error adding book to library:', error);
-      }
-    closeModal();
+      const booksRef = ref(database, 'books');
+      await push(booksRef, newBook);
+      console.log('Book added to library:', newBook);
+      closeModal(); // ✅ keep this
+    } catch (error) {
+      console.error('Error adding book to library:', error);
+    }
   };
+  
   
 
   return (
@@ -176,6 +179,15 @@ const AddNewBook = () => {
                 min="0"
                 />
             </label>
+            <label style={{ display: 'block', marginTop: '10px' }}>
+                <input
+                    type="checkbox"
+                    checked={addToTBR}
+                    onChange={(e) => setAddToTBR(e.target.checked)}
+                />
+                {' '}Add to TBR
+            </label>
+
 
             <button type="submit">Add to Library</button>
             <button type="button" onClick={closeModal}>Cancel</button>

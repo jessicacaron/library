@@ -7,7 +7,6 @@ const BookList = () => {
   const DATABASE_URL = 'https://library-db1a2-default-rtdb.firebaseio.com';
   const navigate = useNavigate();
 
-  // Fetch all books
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -15,7 +14,8 @@ const BookList = () => {
         const data = response.data;
         if (data) {
           const bookArray = Object.entries(data)
-            .map(([key, book]) => ({ key, ...book }));
+            .map(([key, book]) => ({ key, ...book }))
+            .filter((book) => book.status === 'ip'); // ← Only show 'ip'
           setBooks(bookArray);
         } else {
           setBooks([]);
@@ -28,22 +28,20 @@ const BookList = () => {
     fetchBooks();
   }, []);
 
-  // Handle status change for 'Start Reading' and 'Mark as Read'
-  const toggleStatus = async (book) => {
-    const newStatus = book.status === 'in progress' ? 'read' : 'in progress';
+  const markAsRead = async (book) => {
     const updateData = {
-      status: newStatus,
-      dateStarted: newStatus === 'in progress' ? new Date().toISOString().split('T')[0] : book.dateStarted,
-      dateFinished: newStatus === 'read' ? new Date().toISOString().split('T')[0] : book.dateFinished,
+      status: 'none',
+      read: 'y',
+      dateFinished: new Date().toISOString().split('T')[0],
     };
 
     try {
       await axios.patch(`${DATABASE_URL}/books/${book.key}.json`, updateData);
       setBooks((prev) =>
-        prev.map((b) => (b.key === book.key ? { ...b, ...updateData } : b))
+        prev.filter((b) => b.key !== book.key) // remove it from the list
       );
     } catch (error) {
-      console.error('Error updating book status:', error);
+      console.error('Error updating book:', error);
     }
   };
 
@@ -53,14 +51,14 @@ const BookList = () => {
 
   return (
     <div>
-      <h1>Book List</h1>
+      <h1>Currently Reading</h1>
 
       {books.length === 0 ? (
-        <p>No books available.</p>
+        <p>No books in progress.</p>
       ) : (
-        <ul>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
           {books.map((book) => (
-            <li key={book.key}>
+            <li key={book.key} style={{ marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
               <h3>{book.title}</h3>
               <p>Author(s): {Array.isArray(book.authors) ? book.authors.join(', ') : ''}</p>
               <p>Genre: {book.genre}</p>
@@ -73,12 +71,14 @@ const BookList = () => {
                   onClick={() => handleImageClick(book)}
                 />
               )}
-              <button
-                onClick={() => toggleStatus(book)}
-                style={{ padding: '10px', marginTop: '10px', cursor: 'pointer' }}
-              >
-                {book.status === 'in progress' ? 'Mark as Read' : 'Start Reading'}
-              </button>
+              <div>
+                <button
+                  onClick={() => markAsRead(book)}
+                  style={{ padding: '10px', cursor: 'pointer' }}
+                >
+                  Mark as Read
+                </button>
+              </div>
             </li>
           ))}
         </ul>

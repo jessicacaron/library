@@ -5,8 +5,7 @@ import { ref, push, update } from 'firebase/database';
 import { database } from '../../firebase';
 import { remove } from 'firebase/database';
 import BookCardSm from '../ui/BookCardSm';
-
-
+import { Link } from 'react-router-dom';
 import BookCardLg from '../ui/BookCardLg';
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
@@ -93,9 +92,15 @@ const Home = () => {
   // Derived lists
   const inProgressBooks = books.filter((b) => b.status === 'ip');
   const recentlyCompletedBooks = books
-    .filter((b) => b.read === 'y')
-    .sort((a, b) => new Date(b.finishDate) - new Date(a.finishDate))
-    .slice(0, 3);
+  .filter((b) => {
+    if (!b.dateFinished) return false;
+    const finishedDate = new Date(b.dateFinished);
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    return b.read === 'y' && finishedDate >= twoWeeksAgo;
+  })
+  .sort((a, b) => new Date(b.dateFinished) - new Date(a.dateFinished))
+  .slice(0, 3);
 
   // Handlers
   const handleInputChange = (e) => {
@@ -192,6 +197,7 @@ const Home = () => {
     }
   };
   
+  
 
   return (
     <div className='home-container'>
@@ -284,20 +290,31 @@ const Home = () => {
           })}
         </div>
       </div>
-
       <h2>In-Progress Books</h2>
       <div className="card-container">
         {inProgressBooks.map((book) => (
-          <BookCardSm key={book.key} book={book} />
+          <div key={book.key} className="book-with-button">
+            <BookCardSm book={book} />
+            <Link to={`/book/${book.key}`}>
+              <button className="details-button">Details Page</button>
+            </Link>
+          </div>
         ))}
       </div>
 
       <h2>Recently Completed Books</h2>
       <div className="card-container">
         {recentlyCompletedBooks.map((book) => (
-          <BookCardLg key={book.key} book={book} />
+          <div key={book.key} className="book-with-button">
+            <BookCardLg book={book} />
+            <Link to={`/book/${book.key}`}>
+              <button className="details-button">Details Page</button>
+            </Link>
+          </div>
         ))}
       </div>
+
+
 
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} contentLabel="Add Book">
         <h2>Add New Upcoming Book</h2>

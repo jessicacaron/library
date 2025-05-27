@@ -163,7 +163,7 @@ const BookDetails = () => {
         //   marginRight: 'auto',
         // }}
       >
-        <i class="fas fa-arrow-left"></i>
+        <i class="fas fa-arrow-left"></i> Back to Booklist
       </button>
 
       {/* Book details */}
@@ -177,7 +177,18 @@ const BookDetails = () => {
 
       </div>
       
+      
     )}
+          {/* Rate and Read buttons */}
+          <button onClick={openRateModal} style={{ marginTop: '10px' }}>Rate</button>
+      <button onClick={handleReadStatusChange} >
+        {formData.read === 'y' ? 'Mark as Unread' : 'Mark as Read'}
+      </button>
+
+      <button onClick={openModal} style={{ marginTop: '10px' }}><i class="far fa-edit"></i></button>
+      <button onClick={handleDelete} style={{ marginTop: '10px', backgroundColor: 'red', color: 'white' }}>
+      <i class="far fa-trash-alt"></i>
+      </button>
         <p><strong>Title:</strong> {book.title}</p>
         <p><strong>Authors:</strong> {book.authors.join(', ')}</p>
         <p><strong>Published Date:</strong> {book.publishedDate}</p>
@@ -198,17 +209,6 @@ const BookDetails = () => {
           <p><strong>Review:</strong> {book.review}</p>
         )}
       </div>
-
-      {/* Rate and Read buttons */}
-      <button onClick={openRateModal} style={{ marginTop: '10px' }}>Rate</button>
-      <button onClick={handleReadStatusChange} >
-        {formData.read === 'y' ? 'Mark as Unread' : 'Mark as Read'}
-      </button>
-
-      <button onClick={openModal} style={{ marginTop: '10px' }}><i class="far fa-edit"></i></button>
-      <button onClick={handleDelete} style={{ marginTop: '10px', backgroundColor: 'red', color: 'white' }}>
-      <i class="far fa-trash-alt"></i>
-      </button>
 
       {/* Modal for Updating Book */}
       {showModal && (

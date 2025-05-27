@@ -259,10 +259,42 @@ hr{
 }
 
 .sm-card-container{
-  border: 1px solid pink;
   padding: 10px;
 }
 
 .add-new{
   margin: 1.5rem;
+}
+
+.book-with-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.details-button {
+  margin-top: 0.5rem;
+  padding: 6px 12px;
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.details-button:hover {
+  background-color: #357ABD;
+}
+
+.book-with-button {
+  border: 1px solid pink;
+  padding: 1rem;
+}
+
+.book-title {
+  margin-left: 1rem;
+  margin-right: 1rem;
+
 }

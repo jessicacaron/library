@@ -28,17 +28,18 @@ const BookCardSm = ({ book }) => {
         className="flex items-center justify-between cursor-pointer"
       >
     <div className="book-card-header" onClick={() => setIsOpen(!isOpen)}>
-    <div className="title-with-arrow">
-        <h2 className="book-title">{title || 'Untitled Book'}</h2>
-        <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
-    </div>
-        {smCover && (
+    {smCover && (
             <img
             src={smCover}
             alt={title}
             className="book-thumbnail"
             />
         )}
+    <div className="title-with-arrow">
+        <h2 className="book-title">{title || 'Untitled Book'}</h2>
+        <span className="dropdown-arrow">{isOpen ? '▲' : '▼'}</span>
+    </div>
+        
     </div>
 
       </div>
